@@ -5,7 +5,10 @@ import recipeRoutes from './routes/recipeRoutes.js';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Allow requests from your frontend's URL
+    methods: ['GET', 'POST'],
+  }));
 app.use(express.json());
 
 app.use('/api/recipes', recipeRoutes);

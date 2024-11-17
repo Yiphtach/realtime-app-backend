@@ -60,5 +60,18 @@ router.get('/saved', (req, res) => {
   res.json(savedRecipes);
 });
 
+// Delete a saved recipe by ID
+router.delete('/saved/:id', (req, res) => {
+    const { id } = req.params;
+  
+    const index = savedRecipes.findIndex((recipe) => recipe.id === id);
+    if (index === -1) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+  
+    savedRecipes.splice(index, 1);
+    res.json({ message: 'Recipe removed successfully', savedRecipes });
+  });
+
 
 export default router;
