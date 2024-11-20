@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 
+const savedRecipes = [];
 const router = express.Router();
 const API_BASE_URL = 'https://www.themealdb.com/api/json/v1/1';
 
@@ -14,6 +15,22 @@ const fetchFromAPI = async (endpoint, params = {}) => {
     throw new Error('Failed to fetch data from TheMealDB API');
   }
 };
+
+// Search recipes by ingredient
+router.get('/search', async (req, res) => {
+  const { ingredient } = req.query; // Extract 'ingredient' from query parameters
+  if (!ingredient || ingredient.trim() === '') {
+    return res.status(400).json({ message: 'Ingredient parameter is required' });
+  }
+
+  try {
+    const response = await axios.get(`${API_BASE_URL}/filter.php`, { params: { i: ingredient } });
+    res.json(response.data); // Return the API response to the client
+  } catch (error) {
+    console.error('Error fetching recipes by ingredient:', error.message);
+    res.status(500).json({ message: 'Failed to fetch recipes by ingredient' });
+  }
+});
 
 // Search meal by name
 router.get('/search', async (req, res) => {
@@ -113,6 +130,15 @@ router.get('/filter/area', async (req, res) => {
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Get all saved recipes
+router.get('/saved', (req, res) => {
+  try {
+    res.json(savedRecipes); // Ensure `savedRecipes` is defined and accessible
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch saved recipes' });
   }
 });
 
