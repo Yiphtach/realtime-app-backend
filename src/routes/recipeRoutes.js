@@ -142,4 +142,14 @@ router.get('/saved', (req, res) => {
   }
 });
 
+router.post('/save', (req, res) => {
+  const { id, title, image } = req.body;
+  if (!id || !title || !image) {
+    return res.status(400).json({ message: 'Invalid recipe data' });
+  }
+  savedRecipes.push({ id, title, image });
+  res.status(201).json({ message: 'Recipe saved successfully!' });
+});
+
+
 export default router;
