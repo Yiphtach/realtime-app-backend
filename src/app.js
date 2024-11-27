@@ -32,6 +32,21 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Realtime-App Backend API');
+});
+
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to the Realtime-App Backend API',
+    endpoints: {
+      recipes: '/api/recipes',
+      savedRecipes: '/api/recipes/saved',
+      users: '/api/users',
+    },
+  });
+});
+
 // Start the server
 const server = app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);
