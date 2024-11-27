@@ -10,11 +10,11 @@ import savedRoutes from './routes/savedRoutes.js';
 connectDB();
 
 const app = express(); // Initialize Express app
-const PORT = process.env.PORT || 3000; // Use the dynamic PORT from Heroku or fallback to 3000
+const PORT = process.env.PORT || 3000; // Use the dynamic PORT from Heroku
 
 // Enable CORS
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173', 
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Update this for production
 };
 app.use(cors(corsOptions));
 
@@ -33,8 +33,17 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);
+});
+
+// Graceful shutdown for Heroku dyno restarts
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received. Closing server...');
+  server.close(() => {
+    console.log('Server closed gracefully.');
+    process.exit(0); // Exit the process cleanly
+  });
 });
 
 export default app;
