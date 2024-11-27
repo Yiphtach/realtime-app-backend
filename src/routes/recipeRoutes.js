@@ -32,14 +32,20 @@ router.get('/search', async (req, res) => {
   }
 });
 
-// Search meal by name
+// Search meals by name
 router.get('/search', async (req, res) => {
-  const { s } = req.query; // Meal name
+  const { name } = req.query;
+
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ message: 'Meal name is required' });
+  }
+
   try {
-    const data = await fetchFromAPI('/search.php', { s });
-    res.json(data);
+    const response = await axios.get(`${MEALDB_API_BASE_URL}/search.php?s=${name}`);
+    res.json(response.data); // Pass through response from MealDB API
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching meals by name:', error.message);
+    res.status(500).json({ message: 'Failed to fetch meals by name' });
   }
 });
 
