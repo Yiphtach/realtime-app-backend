@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DB_URI } from '../dotenvConfig.js';
+import { DB_URI } from '../../dotenvConfig.js';
 
 const connectDB = async () => {
   try {
